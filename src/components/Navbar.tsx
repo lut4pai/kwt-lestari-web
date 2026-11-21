@@ -15,6 +15,7 @@ import {
 import { useCart } from '@/context/CartContext';
 import { KWT_INFO } from '@/lib/constants';
 import { formatRupiah } from '@/lib/utils';
+import { PartnerLogosBar } from './PartnerLogosBar';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -79,28 +80,32 @@ export function Navbar() {
       {/* Main Sticky Header */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-[72px] flex items-center justify-between gap-3">
-          {/* Brand Logo KWT Lestari */}
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 sm:gap-3 group min-w-0"
-          >
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-cream-50 border border-leaf-200/80 p-0.5 flex items-center justify-center overflow-hidden shrink-0 shadow-sm group-hover:border-leaf-500 transition-colors">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo-kwt-lestari.png"
-                alt="Logo KWT Lestari Desa Sumber Makmur"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <div className="min-w-0">
-              <span className="block text-sm sm:text-base font-bold text-stone-900 tracking-tight leading-tight truncate">
-                {KWT_INFO.shortName}
-              </span>
-              <span className="block text-[11px] sm:text-xs text-stone-500 leading-tight truncate">
-                {KWT_INFO.village}
-              </span>
-            </div>
-          </Link>
+          {/* Brand Logo KWT Lestari + Partner Badges */}
+          <div className="flex items-center gap-3 min-w-0">
+            <Link
+              href="/"
+              className="flex items-center gap-2.5 sm:gap-3 group min-w-0"
+            >
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-cream-50 border border-leaf-200/80 p-0.5 flex items-center justify-center overflow-hidden shrink-0 shadow-sm group-hover:border-leaf-500 transition-colors">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo-kwt-lestari.png"
+                  alt="Logo KWT Lestari Desa Sumber Makmur"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div className="min-w-0">
+                <span className="block text-sm sm:text-base font-bold text-stone-900 tracking-tight leading-tight truncate">
+                  {KWT_INFO.shortName}
+                </span>
+                <span className="block text-[11px] sm:text-xs text-stone-500 leading-tight truncate">
+                  {KWT_INFO.village}
+                </span>
+              </div>
+            </Link>
+
+            <PartnerLogosBar variant="navbar-strip" />
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1 lg:gap-2">

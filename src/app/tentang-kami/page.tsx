@@ -20,6 +20,7 @@ import {
 import { KWT_INFO } from '@/lib/constants';
 import { getStorePayload } from '@/lib/data-service';
 import { formatWaDisplay, normalizeWaNumber } from '@/lib/utils';
+import { PartnerLogosBar } from '@/components/PartnerLogosBar';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -165,6 +166,9 @@ export default async function TentangKamiPage() {
           </div>
         </div>
       </section>
+
+      {/* SECTION KOLABORASI PERGURUAN TINGGI & DUKUNGAN PROGRAM (6 LOGO RESMI) */}
+      <PartnerLogosBar variant="about-grid" />
 
       {/* SECTION 2: FILOSOFI & KOMITMEN (3 PILAR + 2 CERITA DAPUR) */}
       <section className="bg-white border-y border-stone-200/80 py-14 sm:py-16">

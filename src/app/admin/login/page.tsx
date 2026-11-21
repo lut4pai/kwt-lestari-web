@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { supabaseBrowser } from '@/lib/supabase-browser';
 import { KWT_INFO } from '@/lib/constants';
+import { PartnerLogosBar } from '@/components/PartnerLogosBar';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -215,13 +216,16 @@ export default function AdminLoginPage() {
           </form>
 
           {/* Footer Kartu */}
-          <div className="mt-7 pt-5 border-t border-stone-100 text-center">
-            <p className="text-xs font-extrabold text-stone-800 tracking-wide">
-              🌿 KWT LESTARI MANDIRI
-            </p>
-            <p className="mt-0.5 text-[11px] text-stone-500">
-              Sistem Informasi Penjualan Olahan Tani {KWT_INFO.village}
-            </p>
+          <div className="mt-7 pt-5 border-t border-stone-100 text-center space-y-3">
+            <PartnerLogosBar variant="compact" />
+            <div>
+              <p className="text-xs font-extrabold text-stone-800 tracking-wide">
+                🌿 KWT LESTARI MANDIRI
+              </p>
+              <p className="mt-0.5 text-[11px] text-stone-500">
+                Sistem Informasi Penjualan Olahan Tani {KWT_INFO.village}
+              </p>
+            </div>
           </div>
         </div>
 

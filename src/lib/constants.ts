@@ -18,6 +18,75 @@ export const KWT_INFO = {
     'https://www.google.com/maps/search/?api=1&query=Desa+Sumber+Makmur+Kec+Mentaya+Hilir+Utara+Kabupaten+Kotawaringin+Timur+Kalimantan+Tengah+74361',
 };
 
+export interface PartnerLogoItem {
+  id: string;
+  name: string;
+  shortLabel: string;
+  role: string;
+  src: string;
+  supabaseUrl: string;
+  isWide?: boolean;
+}
+
+export const PARTNER_LOGOS: PartnerLogoItem[] = [
+  {
+    id: 'tut-wuri-handayani',
+    name: 'Tut Wuri Handayani (Kemdiktisaintek RI)',
+    shortLabel: 'Tut Wuri Handayani',
+    role: 'Kementerian Pendidikan Tinggi, Sains, dan Teknologi',
+    src: '/logos/tut-wuri-handayani.png',
+    supabaseUrl:
+      'https://izewbwgaesntptvakalk.supabase.co/storage/v1/object/public/product-images/logos/tut-wuri-handayani.png',
+  },
+  {
+    id: 'diktisaintek-berdampak',
+    name: 'Diktisaintek Berdampak',
+    shortLabel: 'Diktisaintek Berdampak',
+    role: 'Program Diktisaintek Berdampak bagi Masyarakat',
+    src: '/logos/diktisaintek-berdampak.png',
+    supabaseUrl:
+      'https://izewbwgaesntptvakalk.supabase.co/storage/v1/object/public/product-images/logos/diktisaintek-berdampak.png',
+  },
+  {
+    id: 'bima',
+    name: 'BIMA (Basis Informasi Penelitian & Pengabdian kepada Masyarakat)',
+    shortLabel: 'BIMA',
+    role: 'Basis Informasi Penelitian & Pengabdian Masyarakat',
+    src: '/logos/bima.png',
+    supabaseUrl:
+      'https://izewbwgaesntptvakalk.supabase.co/storage/v1/object/public/product-images/logos/bima.png',
+    isWide: true,
+  },
+  {
+    id: 'universitas-darwan-ali',
+    name: 'Universitas Darwan Ali (UNDA)',
+    shortLabel: 'Universitas Darwan Ali',
+    role: 'Perguruan Tinggi Pelaksana — Kotawaringin Timur',
+    src: '/logos/universitas-darwan-ali.png',
+    supabaseUrl:
+      'https://izewbwgaesntptvakalk.supabase.co/storage/v1/object/public/product-images/logos/universitas-darwan-ali.png',
+  },
+  {
+    id: 'mahasiswa-berdampak-unda',
+    name: 'Mahasiswa Berdampak Universitas Darwan Ali Tahun 2026',
+    shortLabel: 'Mahasiswa Berdampak UNDA 2026',
+    role: 'Tim Pelaksana Pemberdayaan Desa Sumber Makmur 2026',
+    src: '/logos/mahasiswa-berdampak-unda.png',
+    supabaseUrl:
+      'https://izewbwgaesntptvakalk.supabase.co/storage/v1/object/public/product-images/logos/mahasiswa-berdampak-unda.png',
+  },
+  {
+    id: 'mahasiswa-berdampak',
+    name: 'Mahasiswa Berdampak',
+    shortLabel: 'Mahasiswa Berdampak',
+    role: 'Gerakan Kolaborasi Mahasiswa untuk Kemandirian Desa',
+    src: '/logos/mahasiswa-berdampak.png',
+    supabaseUrl:
+      'https://izewbwgaesntptvakalk.supabase.co/storage/v1/object/public/product-images/logos/mahasiswa-berdampak.png',
+    isWide: true,
+  },
+];
+
 export const PRODUCT_CATEGORIES = [
   'Semua',
   'Keripik',

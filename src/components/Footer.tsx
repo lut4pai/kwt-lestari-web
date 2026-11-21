@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Clock, MapPin } from 'lucide-react';
 import { KWT_INFO } from '@/lib/constants';
+import { PartnerLogosBar } from './PartnerLogosBar';
 
 export function Footer() {
   const pathname = usePathname();
@@ -15,7 +16,9 @@ export function Footer() {
   return (
     <footer className="bg-white border-t border-stone-200/90 mt-16 pb-20 sm:pb-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-stone-100">
+        <PartnerLogosBar variant="footer-row" />
+
+        <div className="pt-8 grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-stone-100">
           {/* Identitas & Logo */}
           <div className="md:col-span-5 space-y-3">
             <div className="flex items-center gap-3">
