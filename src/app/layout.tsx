@@ -21,6 +21,23 @@ export const metadata: Metadata = {
   title: `${KWT_INFO.shortName} ${KWT_INFO.village} — Katalog Olahan Hasil Tani`,
   description:
     'Etalase digital resmi Kelompok Wanita Tani (KWT) Lestari Desa Sumber Makmur, Kec. Mentaya Hilir Utara, Kabupaten Kotawaringin Timur. Pesan keripik, sambal, dan olahan tani alami langsung via WhatsApp.',
+  keywords: [
+    'KWT Lestari',
+    'Desa Sumber Makmur',
+    'Kotawaringin Timur',
+    'Olahan Tani',
+    'Keripik Pisang',
+    'Sambal Chili Oil',
+    'Universitas Darwan Ali',
+    'Mahasiswa Berdampak 2026',
+  ],
+  openGraph: {
+    title: `${KWT_INFO.name} — ${KWT_INFO.village}`,
+    description:
+      'Katalog produk olahan hasil tani segar bebas pengawet dari ibu-ibu KWT Lestari Desa Sumber Makmur. Pesan mudah langsung terhubung ke WhatsApp.',
+    type: 'website',
+    locale: 'id_ID',
+  },
 };
 
 export default async function RootLayout({

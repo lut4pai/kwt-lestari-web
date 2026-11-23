@@ -103,13 +103,20 @@ function isMissingColumnError(err: { code?: string; message?: string } | null): 
 }
 
 /**
- * Mengambil seluruh data katalog produk + pengaturan toko (PostgreSQL utama, fallback Cloud Storage)
+ * Mengambil seluruh data katalog produk + pengaturan toko secara paralel (PostgreSQL utama, fallback Cloud Storage)
  */
 export async function getStorePayload(): Promise<StorePayload> {
-  const productsRes = await supabaseAdmin
-    .from('products')
-    .select('*')
-    .order('created_at', { ascending: false });
+  const [productsRes, settingsRes] = await Promise.all([
+    supabaseAdmin
+      .from('products')
+      .select('*')
+      .order('created_at', { ascending: false }),
+    supabaseAdmin
+      .from('store_settings')
+      .select('*')
+      .order('updated_at', { ascending: false })
+      .limit(1),
+  ]);
 
   if (isMissingTableError(productsRes.error)) {
     const fallback = await readCloudFallback();
@@ -157,12 +164,6 @@ export async function getStorePayload(): Promise<StorePayload> {
 
   let settings: StoreSettings = { ...DEFAULT_STORE_SETTINGS };
   let source: StorageSourceMode = 'postgres';
-
-  const settingsRes = await supabaseAdmin
-    .from('store_settings')
-    .select('*')
-    .order('updated_at', { ascending: false })
-    .limit(1);
 
   if (isMissingTableError(settingsRes.error)) {
     const fallback = await readCloudFallback();

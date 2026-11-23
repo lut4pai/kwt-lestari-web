@@ -100,7 +100,9 @@ export function CartProvider({
   }, []);
 
   useEffect(() => {
-    refreshSettings();
+    if (!initialSettings) {
+      refreshSettings();
+    }
 
     const channel = supabaseBrowser
       .channel('public-store-settings-sync')
@@ -120,7 +122,7 @@ export function CartProvider({
       window.removeEventListener('focus', handleFocus);
       supabaseBrowser.removeChannel(channel);
     };
-  }, [refreshSettings]);
+  }, [initialSettings, refreshSettings]);
 
   const showToast = useCallback((msg: string) => {
     setToastMessage(msg);
