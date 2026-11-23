@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { cache } from 'react';
 import { supabaseAdmin } from './supabase-admin';
 import { DEFAULT_STORE_SETTINGS, INITIAL_PRODUCTS_SEED } from './constants';
 import { normalizeWaNumber } from './utils';
@@ -6,6 +7,14 @@ import { Product, StorageSourceMode, StorePayload, StoreSettings } from '@/types
 
 const CLOUD_BUCKET = 'kwt-cloud-store';
 const CLOUD_STATE_FILE = 'store-state-v1.json';
+
+// Micro-cache di memori server (TTL 4 detik) yang langsung di-reset setiap ada perubahan Admin
+let cachedPayload: { data: StorePayload; expiresAt: number } | null = null;
+const CACHE_TTL_MS = 4000;
+
+export function invalidateStoreCache(): void {
+  cachedPayload = null;
+}
 
 interface CloudFallbackState {
   products: Product[];
@@ -103,9 +112,14 @@ function isMissingColumnError(err: { code?: string; message?: string } | null): 
 }
 
 /**
- * Mengambil seluruh data katalog produk + pengaturan toko secara paralel (PostgreSQL utama, fallback Cloud Storage)
+ * Mengambil seluruh data katalog produk + pengaturan toko secara paralel
+ * Dilengkapi deduplikasi request React.cache() & micro-cache yang auto-invalidate saat Admin melakukan CRUD.
  */
-export async function getStorePayload(): Promise<StorePayload> {
+async function fetchStorePayloadInternal(forceFresh = false): Promise<StorePayload> {
+  if (!forceFresh && cachedPayload && Date.now() < cachedPayload.expiresAt) {
+    return cachedPayload.data;
+  }
+
   const [productsRes, settingsRes] = await Promise.all([
     supabaseAdmin
       .from('products')
@@ -120,11 +134,13 @@ export async function getStorePayload(): Promise<StorePayload> {
 
   if (isMissingTableError(productsRes.error)) {
     const fallback = await readCloudFallback();
-    return {
+    const result: StorePayload = {
       products: fallback.products,
       settings: fallback.settings,
       source: 'cloud_storage_fallback',
     };
+    cachedPayload = { data: result, expiresAt: Date.now() + CACHE_TTL_MS };
+    return result;
   }
 
   let products = (productsRes.data || []).map((row) =>
@@ -187,8 +203,14 @@ export async function getStorePayload(): Promise<StorePayload> {
     }
   }
 
-  return { products, settings, source };
+  const result: StorePayload = { products, settings, source };
+  cachedPayload = { data: result, expiresAt: Date.now() + CACHE_TTL_MS };
+  return result;
 }
+
+export const getStorePayload = cache((forceFresh = false) =>
+  fetchStorePayloadInternal(forceFresh)
+);
 
 export interface UpsertProductInput {
   name: string;
@@ -218,6 +240,7 @@ export async function createProductRecord(input: UpsertProductInput): Promise<Pr
     .single();
 
   if (!res.error && res.data) {
+    invalidateStoreCache();
     return normalizeProduct(res.data as Record<string, unknown>);
   }
 
@@ -251,9 +274,11 @@ export async function createProductRecord(input: UpsertProductInput): Promise<Pr
     };
     state.products = [created, ...state.products];
     await writeCloudFallback(state);
+    invalidateStoreCache();
     return created;
   }
 
+  invalidateStoreCache();
   throw new Error(res.error?.message || 'Gagal menambahkan produk.');
 }
 
@@ -278,6 +303,7 @@ export async function updateProductRecord(
     .single();
 
   if (!res.error && res.data) {
+    invalidateStoreCache();
     return normalizeProduct(res.data as Record<string, unknown>);
   }
 
@@ -315,21 +341,27 @@ export async function updateProductRecord(
     };
     state.products[idx] = updated;
     await writeCloudFallback(state);
+    invalidateStoreCache();
     return updated;
   }
 
+  invalidateStoreCache();
   throw new Error(res.error?.message || 'Gagal memperbarui produk.');
 }
 
 export async function deleteProductRecord(id: string): Promise<void> {
   const res = await supabaseAdmin.from('products').delete().eq('id', id);
 
-  if (!res.error) return;
+  if (!res.error) {
+    invalidateStoreCache();
+    return;
+  }
 
   if (isMissingTableError(res.error)) {
     const state = await readCloudFallback();
     state.products = state.products.filter((p) => p.id !== id);
     await writeCloudFallback(state);
+    invalidateStoreCache();
     return;
   }
 
@@ -377,6 +409,7 @@ export async function updateStoreSettingsRecord(input: {
     if (updated.error) {
       throw new Error(updated.error.message);
     }
+    invalidateStoreCache();
     return normalizeSettings(updated.data as Record<string, unknown>);
   }
 
@@ -393,5 +426,6 @@ export async function updateStoreSettingsRecord(input: {
   if (inserted.error) {
     throw new Error(inserted.error.message);
   }
+  invalidateStoreCache();
   return normalizeSettings(inserted.data as Record<string, unknown>);
 }
