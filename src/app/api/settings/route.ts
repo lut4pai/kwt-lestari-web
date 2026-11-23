@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getStorePayload, updateStoreSettingsRecord } from '@/lib/data-service';
 import { verifyAdminRequest } from '@/lib/supabase-admin';
 
@@ -38,6 +39,8 @@ export async function PUT(req: NextRequest) {
       wa_greeting: String(body?.wa_greeting || '').trim(),
     });
 
+    revalidatePath('/', 'layout');
+    revalidatePath('/tentang-kami');
     return NextResponse.json({ settings });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Gagal menyimpan pengaturan toko.';

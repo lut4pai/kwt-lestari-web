@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { deleteProductRecord, updateProductRecord } from '@/lib/data-service';
 import { verifyAdminRequest } from '@/lib/supabase-admin';
 
@@ -28,6 +29,8 @@ export async function PATCH(
       is_available: body.is_available,
     });
 
+    revalidatePath('/', 'layout');
+    revalidatePath('/tentang-kami');
     return NextResponse.json({ product });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Gagal memperbarui produk.';
@@ -49,6 +52,8 @@ export async function DELETE(
     }
 
     await deleteProductRecord(params.id);
+    revalidatePath('/', 'layout');
+    revalidatePath('/tentang-kami');
     return NextResponse.json({ success: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Gagal menghapus produk.';

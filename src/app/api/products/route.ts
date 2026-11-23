@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { createProductRecord, getStorePayload } from '@/lib/data-service';
 import { verifyAdminRequest } from '@/lib/supabase-admin';
 
@@ -42,6 +43,8 @@ export async function POST(req: NextRequest) {
       is_available: body.is_available !== false,
     });
 
+    revalidatePath('/', 'layout');
+    revalidatePath('/tentang-kami');
     return NextResponse.json({ product }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Gagal menambahkan produk.';

@@ -15,7 +15,7 @@ const jakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: `${KWT_INFO.shortName} ${KWT_INFO.village} — Katalog Olahan Hasil Tani`,

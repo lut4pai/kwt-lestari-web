@@ -50,6 +50,8 @@ export function CatalogSection({ initialProducts }: CatalogSectionProps) {
 
   // Langganan Supabase Realtime + sinkronisasi saat tab aktif kembali
   useEffect(() => {
+    refreshStore();
+
     const channel = supabaseBrowser
       .channel('public-products-realtime')
       .on(

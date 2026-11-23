@@ -22,8 +22,7 @@ import { getStorePayload } from '@/lib/data-service';
 import { formatWaDisplay, normalizeWaNumber } from '@/lib/utils';
 import { PartnerLogosBar } from '@/components/PartnerLogosBar';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 30;
 
 export default async function TentangKamiPage() {
   const { settings } = await getStorePayload();
